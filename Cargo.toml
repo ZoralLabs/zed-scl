@@ -1,0 +1,14 @@
+[package]
+name = "scl"
+version = "1.0.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+zed_extension_api = "0.0.6"
+
+[profile.release]
+lto = true
+strip = true

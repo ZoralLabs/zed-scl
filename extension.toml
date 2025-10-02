@@ -1,0 +1,52 @@
+id = "scl"
+name = "SCL"
+description = "Zed extension for SCL and SCD languages with syntax highlighting and language server integration"
+version = "1.0.0"
+schema_version = 1
+authors = ["Yurii Biurher"]
+repository = "https://github.com/ZoralLabs/zed-scl"
+
+[languages.scl]
+name = "SCL"
+grammar = "scl"
+path_suffixes = ["scl"]
+line_comments = ["//"]
+block_comment = ["/*", "*/"]
+autoclose_before = ")]},*hWhEtAeIoUaAeIoUaAeIoUaAeIoUaAeIoUaAeIoU"
+brackets = [
+  { start = "{", end = "}", close = true, newline = true },
+  { start = "[", end = "]", close = true, newline = true },
+  { start = "(", end = ")", close = true, newline = true },
+  { start = "\"", end = "\"", close = true, newline = false, not_in = ["string"] },
+  { start = "'", end = "'", close = true, newline = false, not_in = ["string"] },
+]
+
+[languages.scd]
+name = "SCD"
+grammar = "scd"
+path_suffixes = ["scd"]
+line_comments = ["#"]
+autoclose_before = ")]},*hWhEtAeIoUaAeIoUaAeIoUaAeIoUaAeIoUaAeIoU"
+brackets = [
+  { start = "{", end = "}", close = true, newline = true },
+  { start = "[", end = "]", close = true, newline = true },
+  { start = "(", end = ")", close = true, newline = true },
+  { start = "\"", end = "\"", close = true, newline = false, not_in = ["string"] },
+  { start = "'", end = "'", close = true, newline = false, not_in = ["string"] },
+]
+
+[grammars.scl]
+repository = "https://github.com/ZoralLabs/tree-sitter-scl"
+commit = "main"
+
+[grammars.scd]
+repository = "https://github.com/ZoralLabs/tree-sitter-scd"
+commit = "main"
+
+[language_servers.scl-lsp]
+name = "SCL Language Server"
+language = ["scl", "scd"]
+
+[language_servers.scl-lsp.binary]
+command = "scl-lsp"
+arguments = []
