@@ -15,19 +15,16 @@
 (block_mapping_pair
   key: (identifier) @name
   value: (block_mapping)) @item
-  (#ancestor? @item (block_mapping_pair key: (identifier) (#eq? @name "parameters")))
 
 ; Balance definitions within the balances section
 (block_mapping_pair
   key: (identifier) @name
   value: (block_mapping)) @item
-  (#ancestor? @item (block_mapping_pair key: (identifier) (#eq? @name "balances")))
 
 ; Event definitions within the events section
 (block_mapping_pair
   key: (identifier) @name
   value: (block_mapping)) @item
-  (#ancestor? @item (block_mapping_pair key: (identifier) (#eq? @name "events")))
 
 ; Configuration sections and important properties
 (block_mapping_pair
@@ -35,8 +32,7 @@
   (#match? @name "^(group_name|ledger|currency|enum_values)$")) @item
 
 ; YAML anchors - these can be referenced elsewhere in the document
-(anchor
-  name: (anchor_name) @name) @item
+(anchor_name) @name @item
 
 ; Block sequences that might represent lists of items
 (block_mapping_pair

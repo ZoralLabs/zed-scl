@@ -20,58 +20,58 @@
 
 ; Special indentation for control flow
 (if_statement
-  condition: (_) @indent.align)
+  condition: (_) @_indent.align)
 
 (for_statement
-  condition: (_) @indent.align)
+  condition: (_) @_indent.align)
 
 (for_in_statement
-  iterable: (_) @indent.align)
+  iterable: (_) @_indent.align)
 
 ; Indent continuation lines
 (binary_expression
-  right: (_) @indent.begin)
+  right: (_) @_indent.begin)
 
 (assignment_statement
-  right: (_) @indent.begin)
+  right: (_) @_indent.begin)
 
 (variable_declaration
-  value: (_) @indent.begin)
+  value: (_) @_indent.begin)
 
 ; Indent function call arguments when split across lines
 (function_call
-  arguments: (argument_list) @indent.begin)
+  arguments: (argument_list) @_indent.begin)
 
 ; Indent method chaining
 (selector_expression
-  "." @indent.begin)
+  "." @_indent.begin)
 
 ; Indent array elements when split across lines
 (array_literal
-  (_) @indent.begin)
+  (_) @_indent.begin)
 
 ; Indent map properties when split across lines
 (map_literal
-  (map_pair) @indent.begin)
+  (map_pair) @_indent.begin)
 
 ; Special handling for SCL built-in function calls
 (function_call
   function: (identifier)
-  arguments: (argument_list) @indent.begin
+  arguments: (argument_list) @_indent.begin
   (#match? @function "(reject|set_parameter|schedule_event|new_transaction|new_posting|deactivate)"))
 
 ; Indent ternary expressions
 (ternary_expression
-  "?" @indent.begin
-  ":" @indent.begin)
+  "?" @_indent.begin
+  ":" @_indent.begin)
 
 ; Handle multiline string literals
-(string_literal @indent.begin
-  (#match? @indent.begin "\n"))
+(string_literal @_indent.begin
+  (#match? @_indent.begin "\n"))
 
-(raw_string_literal @indent.begin
-  (#match? @indent.begin "\n"))
+(raw_string_literal @_indent.begin
+  (#match? @_indent.begin "\n"))
 
 ; Indent comments that continue previous lines
-(comment @indent.begin
-  (#match? @indent.begin "^\\s*//\\s*[^/]"))
+(comment @_indent.begin
+  (#match? @_indent.begin "^\\s*//\\s*[^/]"))
