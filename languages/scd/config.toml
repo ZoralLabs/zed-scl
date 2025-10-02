@@ -2,46 +2,14 @@ name = "SCD"
 grammar = "scd"
 path_suffixes = ["scd"]
 line_comments = ["#"]
-autoclose_before = ")]},*hWhEtAeIoUaAeIoUaAeIoUaAeIoUaAeIoUaAeIoU"
+autoclose_before = ";:.,=}])>"
+tab_size = 4
+hard_tabs = false
 
-[[brackets]]
-start = "{"
-end = "}"
-close = true
-newline = true
-
-[[brackets]]
-start = "["
-end = "]"
-close = true
-newline = true
-
-[[brackets]]
-start = "("
-end = ")"
-close = true
-newline = true
-
-[[brackets]]
-start = "\""
-end = "\""
-close = true
-newline = false
-not_in = ["string"]
-
-[[brackets]]
-start = "'"
-end = "'"
-close = true
-newline = false
-not_in = ["string"]
-
-[language_server]
-name = "scl-lsp"
-
-[indent]
-unit = "    "
-
-[folding]
-start_regex = "^\\s*#\\s*region\\b"
-end_regex = "^\\s*#\\s*endregion\\b"
+brackets = [
+  { start = "{", end = "}", close = true, newline = true },
+  { start = "[", end = "]", close = true, newline = true },
+  { start = "(", end = ")", close = true, newline = true },
+  { start = "\"", end = "\"", close = true, newline = false, not_in = ["string"] },
+  { start = "'", end = "'", close = true, newline = false, not_in = ["string"] },
+]

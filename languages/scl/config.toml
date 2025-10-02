@@ -3,39 +3,14 @@ grammar = "scl"
 path_suffixes = ["scl"]
 line_comments = ["//"]
 block_comment = ["/*", "*/"]
-autoclose_before = ")]},*hWhEtAeIoUaAeIoUaAeIoUaAeIoUaAeIoUaAeIoU"
+autoclose_before = ";:.,=}])>"
+tab_size = 4
+hard_tabs = false
 
-[[brackets]]
-start = "{"
-end = "}"
-close = true
-newline = true
-
-[[brackets]]
-start = "["
-end = "]"
-close = true
-newline = true
-
-[[brackets]]
-start = "("
-end = ")"
-close = true
-newline = true
-
-[[brackets]]
-start = "\""
-end = "\""
-close = true
-newline = false
-not_in = ["string"]
-
-[[brackets]]
-start = "'"
-end = "'"
-close = true
-newline = false
-not_in = ["string"]
-
-[language_server]
-name = "scl-lsp"
+brackets = [
+  { start = "{", end = "}", close = true, newline = true },
+  { start = "[", end = "]", close = true, newline = true },
+  { start = "(", end = ")", close = true, newline = true },
+  { start = "\"", end = "\"", close = true, newline = false, not_in = ["string"] },
+  { start = "'", end = "'", close = true, newline = false, not_in = ["string"] },
+]
