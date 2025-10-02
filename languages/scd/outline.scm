@@ -1,90 +1,44 @@
-; Package definition
-(package_definition
-  id: (identifier) @name) @item
+; Minimal working outline for SCD files
+; Basic outline patterns that should work with most tree-sitter grammars
 
-; Type definitions
-(type_definition
-  name: (identifier) @name) @item
+; Basic structural elements
+(object @item)
+(array @item)
+(block @item)
+(section @item)
 
-; Parameter definitions
-(parameter_definition
-  name: (identifier) @name) @item
+; Parameter structures
+(parameters @item)
+(parameter @item)
 
-; Configuration sections
-(parameters_section) @item
+; Key-value pairs
+(pair @item)
 
-(constants_section) @item
+; Configuration entries
+(config @item)
 
-(balances_section) @item
+; Comments that might serve as headers
+(comment @item)
 
-(interest_section) @item
+; Identifiers that might be important
+(identifier @item)
 
-(core_section) @item
+; String literals that might be names
+(string @item)
+(string_literal @item)
 
-; Individual parameters with their names
-(parameter
-  name: (identifier) @name) @item
+; Package and module definitions (if they exist)
+(package @item)
+(module @item)
 
-; Nested parameter groups
-(parameter_group
-  name: (string_literal) @name) @item
+; Type definitions (if they exist)
+(type @item)
 
-; Balance definitions
-(balance_definition
-  name: (identifier) @name) @item
+; Function definitions (if they exist)
+(function @item)
 
-; Transaction type definitions
-(transaction_type_definition
-  name: (identifier) @name) @item
+; Variable definitions (if they exist)
+(variable @item)
 
-; Posting type definitions
-(posting_type_definition
-  name: (identifier) @name) @item
-
-; Enum definitions
-(enum_definition
-  name: (identifier) @name) @item
-
-; Configuration keys at top level
-(config_entry
-  key: (identifier) @name) @item
-
-; Package metadata
-(package_id
-  value: (string_literal) @name) @item
-
-(package_name
-  value: (string_literal) @name) @item
-
-(package_type
-  value: (identifier) @name) @item
-
-(package_category
-  value: (identifier) @name) @item
-
-; Author and organization
-(author
-  value: (string_literal) @name) @item
-
-(org_unit
-  value: (string_literal) @name) @item
-
-; Rate definitions
-(rate_definition
-  name: (identifier) @name) @item
-
-; Frequency definitions
-(frequency_definition
-  name: (identifier) @name) @item
-
-; Date/time configurations
-(datetime_config
-  name: (identifier) @name) @item
-
-; Currency configurations
-(currency_config
-  name: (identifier) @name) @item
-
-; Ledger configurations
-(ledger_config
-  name: (identifier) @name) @item
+; Constants (if they exist)
+(constant @item)

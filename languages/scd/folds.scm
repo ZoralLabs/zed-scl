@@ -1,48 +1,31 @@
-; Fold parameter blocks
-(parameters
-  (parameter_block) @fold)
+; Minimal working folds for SCD files
+; Basic folding patterns that should work with most tree-sitter grammars
 
-; Fold nested parameter definitions
-(parameter_definition
-  (parameter_body) @fold)
+; Object and array structures
+(object) @fold
+(array) @fold
 
-; Fold object-like structures
-(object_literal) @fold
+; Block structures
+(block) @fold
 
-; Fold array definitions
-(array_literal) @fold
+; Parameter sections (if they exist in the grammar)
+(parameters) @fold
+(parameter) @fold
 
-; Fold nested configuration blocks
-(config_block) @fold
+; Configuration sections
+(section) @fold
 
-; Fold parameter groups
-(parameter_group) @fold
+; Multi-line comments
+(comment) @fold
 
-; Fold enum value lists
-(enum_values
-  (enum_list) @fold)
+; Multi-line strings
+(string_literal) @fold
 
-; Fold multi-line parameter definitions
-(parameter
-  (parameter_options) @fold)
+; Key-value pairs that might be multi-line
+(pair) @fold
 
-; Fold nested structures in SCD files
-(nested_object) @fold
+; Any nested structure with braces
+(_ "{" "}" @fold)
 
-; Fold configuration sections
-(configuration_section) @fold
-
-; Fold balance definitions
-(balance_definition) @fold
-
-; Fold interest configuration
-(interest_config) @fold
-
-; Fold constants section
-(constants_section) @fold
-
-; Fold core parameters section
-(core_section) @fold
-
-; Fold large parameter blocks with multiple properties
-(parameter_with_properties) @fold
+; Any nested structure with brackets
+(_ "[" "]" @fold)
