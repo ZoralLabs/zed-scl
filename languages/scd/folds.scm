@@ -1,31 +1,37 @@
-; Minimal working folds for SCD files
-; Basic folding patterns that should work with most tree-sitter grammars
+; YAML-based folding for SCD files
+; Targets actual grammar nodes from tree-sitter-scd
 
-; Object and array structures
-(object) @fold
-(array) @fold
+; YAML block structures - main folding targets
+(block_mapping) @fold
+(block_sequence) @fold
 
-; Block structures
-(block) @fold
-
-; Parameter sections (if they exist in the grammar)
-(parameters) @fold
-(parameter) @fold
-
-; Configuration sections
-(section) @fold
-
-; Multi-line comments
-(comment) @fold
+; Flow structures (inline YAML)
+(flow_mapping) @fold
+(flow_sequence) @fold
 
 ; Multi-line strings
-(string_literal) @fold
+(double_quoted_string) @fold
+(single_quoted_string) @fold
 
-; Key-value pairs that might be multi-line
-(pair) @fold
+; Comments (for multi-line comment blocks)
+(comment) @fold
 
-; Any nested structure with braces
-(_ "{" "}" @fold)
+; Document sections (if they span multiple lines)
+(document) @fold
 
-; Any nested structure with brackets
-(_ "[" "]" @fold)
+; Block mapping pairs that contain nested structures
+(block_mapping_pair
+  value: (block_mapping)) @fold
+
+(block_mapping_pair
+  value: (block_sequence)) @fold
+
+; Block sequence items that contain nested structures
+(block_sequence_item
+  (block_mapping)) @fold
+
+(block_sequence_item
+  (block_sequence)) @fold
+
+; Anchored values (YAML anchors with content)
+(anchor) @fold

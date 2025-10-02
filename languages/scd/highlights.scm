@@ -1,57 +1,82 @@
-; Minimal working highlights for SCD files
-; Basic syntax elements that should work with most tree-sitter grammars
-
 ; Comments
 (comment) @comment
-(line_comment) @comment
 
-; String literals
+; Document markers
+(document_start) @punctuation.special
+(document_end) @punctuation.special
+
+; Keys in mappings - these are the main structural elements
+(block_mapping_pair key: (identifier) @property)
+(flow_mapping_pair key: (identifier) @property)
+(block_mapping_pair key: (quoted_string) @property)
+(flow_mapping_pair key: (quoted_string) @property)
+
+; SCD-specific types - core type system
+(scd_type) @type.builtin
+
+; Basic scalar types
+(boolean) @constant.builtin.boolean
+(null) @constant.builtin
+(integer) @constant.numeric.integer
+(float) @constant.numeric.float
+
+; Strings
+(double_quoted_string) @string
+(single_quoted_string) @string
+(double_quoted_content) @string
+(single_quoted_content) @string
 (string) @string
-(string_literal) @string
 
-; Numbers
-(number) @number
-(integer) @number
-(decimal) @number
+; Escape sequences in strings
+(escape_sequence) @constant.character.escape
 
 ; Identifiers
 (identifier) @variable
 
-; Boolean literals
-(true) @constant.builtin.boolean
-(false) @constant.builtin.boolean
+; YAML anchors and aliases
+(anchor "&" @punctuation.special)
+(anchor_name) @label
+(alias "*" @punctuation.special)
+(alias_name) @label
 
-; Basic punctuation
+; Punctuation
 ":" @punctuation.delimiter
 "," @punctuation.delimiter
-";" @punctuation.delimiter
-"=" @operator
+"-" @punctuation.delimiter
 
-; Brackets
+; Brackets for flow structures
 "{" @punctuation.bracket
 "}" @punctuation.bracket
 "[" @punctuation.bracket
 "]" @punctuation.bracket
-"(" @punctuation.bracket
-")" @punctuation.bracket
 
-; Common SCD keywords as literal strings
-"id" @keyword
-"name" @keyword
-"type" @keyword
-"description" @keyword
-"author" @keyword
-"parameters" @keyword
-"default" @keyword
-"optional" @keyword
+; Known SCD section names - these are the main document structure
+((identifier) @keyword.control
+ (#match? @keyword.control "^(parameters|balances|events|id|type|tier|name|category|description|author|org_unit|timezone|version)$"))
 
-; Data types
-"string" @type.builtin
-"integer" @type.builtin
-"decimal" @type.builtin
-"boolean" @type.builtin
-"date" @type.builtin
-"currency" @type.builtin
+; Known parameter and configuration properties
+((identifier) @attribute
+ (#match? @attribute "^(type|optional|group_name|group_order|description|default|enum_values|ledger|currency|precision|scale|min|max|pattern|format)$"))
+
+; SCD-specific values that appear as plain scalars
+((string) @type.builtin
+ (#match? @type.builtin "^(decimal|ledger|currency|date_time|integer|transaction_type|posting_type|balance_id|dated_rate|enum|datetime|tiered_rate|json|string|boolean)$"))
+
+; Transaction and posting types (common SCD values)
+((string) @constant.builtin
+ (#match? @constant.builtin "^(debit|credit|asset|liability|equity|income|expense)$"))
+
+; Common boolean-like SCD values
+((string) @constant.builtin.boolean
+ (#match? @constant.builtin.boolean "^(required|optional|enabled|disabled)$"))
+
+; ISO currency codes (common in SCD files)
+((string) @constant.builtin
+ (#match? @constant.builtin "^[A-Z]{3}$"))
+
+; Date patterns (ISO format common in SCD)
+((string) @constant.numeric
+ (#match? @constant.numeric "^[0-9]{4}-[0-9]{2}-[0-9]{2}"))
 
 ; Error nodes for debugging
 (ERROR) @error
