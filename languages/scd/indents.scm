@@ -40,7 +40,8 @@
 (single_quoted_string) @indent.always
 
 ; YAML anchors - indent the anchored content
-(anchor @indent
+(anchor
+  "&" @indent
   (#set! "scope" "all"))
 
 ; Document markers don't affect indentation
