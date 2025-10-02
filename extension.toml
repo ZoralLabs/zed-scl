@@ -1,7 +1,7 @@
 id = "scl"
 name = "SCL"
 description = "Zed extension for SCL and SCD languages with syntax highlighting and language server integration"
-version = "1.0.0"
+version = "2.0.1"
 schema_version = 1
 authors = ["Yurii Biurher"]
 repository = "https://github.com/ZoralLabs/zed-scl"
