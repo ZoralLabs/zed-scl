@@ -2,118 +2,55 @@
 [
   "if"
   "else"
-  "while"
   "for"
+  "in"
+  "func"
   "return"
-  "break"
-  "continue"
   "import"
   "export"
-  "let"
-  "const"
   "var"
-  "function"
-  "class"
-  "struct"
-  "enum"
-  "interface"
-  "type"
-  "new"
-  "delete"
-  "try"
-  "catch"
-  "finally"
-  "throw"
-  "true"
-  "false"
-  "null"
-  "undefined"
-  "void"
+  "break"
+  "continue"
 ] @keyword
 
-; Control flow
+; Built-in SCL functions
 [
-  "if"
-  "else"
-  "while"
-  "for"
-  "return"
-  "break"
-  "continue"
-  "match"
-  "case"
-  "default"
-] @keyword.control
+  "reject"
+  "set_parameter"
+  "schedule_event"
+  "new_transaction"
+  "new_posting"
+  "deactivate"
+  "min"
+  "max"
+] @function.builtin
 
-; Import/export
+; Boolean literals
 [
-  "import"
-  "export"
-  "from"
-  "as"
-] @keyword.import
-
-; Storage modifiers
-[
-  "let"
-  "const"
-  "var"
-  "static"
-  "final"
-  "readonly"
-] @keyword.storage
-
-; Types
-[
-  "bool"
-  "int"
-  "float"
-  "string"
-  "char"
-  "decimal"
-  "date"
-  "datetime"
-  "time"
-  "currency"
-  "ledger"
-  "balance_id"
-  "transaction_type"
-  "posting_type"
-  "enum"
-  "dated_rate"
-  "integer"
-] @type.builtin
-
-; Functions
-(function_definition
-  name: (identifier) @function)
-
-(function_call
-  name: (identifier) @function)
-
-; Variables and identifiers
-(identifier) @variable
-
-; Parameters
-(parameter
-  name: (identifier) @variable.parameter)
-
-; Constants
-(boolean_literal) @constant.builtin
-(null_literal) @constant.builtin
-
-; Numbers
-(integer_literal) @number
-(float_literal) @number
-(decimal_literal) @number
-
-; Strings
-(string_literal) @string
-(string_interpolation) @string.special
+  "true"
+  "false"
+  "undefined"
+] @constant.builtin
 
 ; Comments
-(line_comment) @comment
-(block_comment) @comment
+(comment) @comment
+
+; Identifiers
+(identifier) @variable
+
+; Parameter variables (prefixed with $)
+(parameter_variable) @variable.parameter
+
+; Function definitions and calls
+(function_literal
+  parameters: (parameter_list) @parameter)
+
+(function_call
+  function: (identifier) @function)
+
+(function_call
+  function: (selector_expression
+    property: (identifier) @function.method))
 
 ; Operators
 [
@@ -122,101 +59,106 @@
   "*"
   "/"
   "%"
-  "="
+  "<<"
+  ">>"
+  "&"
+  "&^"
+  "|"
+  "^"
   "=="
   "!="
   "<"
-  ">"
   "<="
+  ">"
   ">="
   "&&"
   "||"
   "!"
-  "&"
-  "|"
-  "^"
-  "<<"
-  ">>"
+] @operator
+
+; Assignment operators
+[
+  "="
+  ":="
   "+="
   "-="
   "*="
   "/="
   "%="
-] @operator
+  "&="
+  "|="
+  "&^="
+  "^="
+  "<<="
+  ">>="
+] @operator.assignment
 
 ; Punctuation
 [
+  "("
+  ")"
+  "{"
+  "}"
+  "["
+  "]"
+] @punctuation.bracket
+
+[
+  ","
   ";"
   ":"
-  ","
   "."
 ] @punctuation.delimiter
 
-[
-  "("
-  ")"
-  "["
-  "]"
-  "{"
-  "}"
-] @punctuation.bracket
+; Literals
+(number_literal) @number
 
-; Special SCL constructs
-(schedule_event) @function.builtin
-(new_transaction) @function.builtin
-(new_posting) @function.builtin
-(set_parameter) @function.builtin
-(reject) @function.builtin
-(deactivate) @function.builtin
+(string_literal) @string
+(raw_string_literal) @string
+(char_literal) @string
 
-; Field access
-(field_expression
-  field: (identifier) @property)
+; Control flow
+(if_statement) @conditional
+(for_statement) @repeat
+(for_in_statement) @repeat
 
-; Method calls
-(method_call
-  method: (identifier) @method)
+(return_statement) @keyword.return
+(break_statement) @keyword.control
+(continue_statement) @keyword.control
 
-; Attributes/annotations
-(attribute) @attribute
+; Import/Export
+(import_expression) @keyword.import
+(export_statement) @keyword.export
 
-; Error handling
-(error_literal) @constant.builtin
+; Property access
+(selector_expression
+  property: (identifier) @property)
 
-; Special variables (SCL specific)
-[
-  "$effective_time"
-  "$term_type"
-  "$installment_demand_date"
-  "$installment_demand_day"
-  "$interest_book_frequency"
-  "$interest_book_date"
-  "$interest_book_day"
-  "$debit_interest_accrual_balance"
-  "$interest_transaction_type"
-  "$interest_receivable_balance_id"
-  "$interest_earned_balance_id"
-  "$interest_posting_type"
-  "$debit_interest_booked_balance_id"
-  "$primary_is_zero"
-  "$arrears_principle_is_zero"
-  "$arrears_interest_is_zero"
-  "$debit_interest_booked_is_zero"
-  "$penal_interest_accrual_is_zero"
-  "$ledger"
-  "$currency_code"
-  "$loan_amount"
-  "$loan_period"
-] @variable.builtin
+; Array and map access
+(index_expression) @operator
 
-; Built-in functions
-[
-  "min"
-  "max"
-  "abs"
-  "round"
-  "floor"
-  "ceil"
-  "date_str"
-  "times"
-] @function.builtin
+; Map keys in literals
+(map_pair
+  key: (_) @property)
+
+; Function parameters
+(parameter) @parameter
+(variadic_parameter) @parameter
+
+; Special highlighting for error/reject calls
+(function_call
+  function: (identifier) @function.builtin.error
+  (#eq? @function.builtin.error "reject"))
+
+; Special highlighting for parameter setting
+(function_call
+  function: (identifier) @function.builtin.config
+  (#eq? @function.builtin.config "set_parameter"))
+
+; Module names in imports
+(import_expression
+  source: (string_literal) @string.special)
+
+; Increment/decrement
+(increment_statement) @operator
+(decrement_statement) @operator

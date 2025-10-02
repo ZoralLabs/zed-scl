@@ -1,18 +1,11 @@
 ; Increase indent after opening braces
-(block_statement "{" @indent)
-(object_literal "{" @indent)
+(block "{" @indent)
+(map_literal "{" @indent)
 (array_literal "[" @indent)
-(function_definition "{" @indent)
-(class_definition "{" @indent)
-(struct_definition "{" @indent)
+(function_literal "{" @indent)
 (if_statement "{" @indent)
-(else_clause "{" @indent)
-(while_statement "{" @indent)
 (for_statement "{" @indent)
-(try_statement "{" @indent)
-(catch_clause "{" @indent)
-(match_statement "{" @indent)
-(case_clause "{" @indent)
+(for_in_statement "{" @indent)
 
 ; Decrease indent before closing braces
 ("}" @outdent)
@@ -29,53 +22,56 @@
 (if_statement
   condition: (_) @indent.align)
 
-(while_statement
+(for_statement
   condition: (_) @indent.align)
 
-(for_statement
-  initializer: (_) @indent.align)
+(for_in_statement
+  iterable: (_) @indent.align)
 
 ; Indent continuation lines
 (binary_expression
   right: (_) @indent.begin)
 
-(assignment_expression
+(assignment_statement
   right: (_) @indent.begin)
+
+(variable_declaration
+  value: (_) @indent.begin)
 
 ; Indent function call arguments when split across lines
 (function_call
   arguments: (argument_list) @indent.begin)
 
 ; Indent method chaining
-(method_call
+(selector_expression
   "." @indent.begin)
 
 ; Indent array elements when split across lines
 (array_literal
-  (array_element) @indent.begin)
+  (_) @indent.begin)
 
-; Indent object properties when split across lines
-(object_literal
-  (object_property) @indent.begin)
+; Indent map properties when split across lines
+(map_literal
+  (map_pair) @indent.begin)
 
-; Special handling for SCL constructs
-(schedule_event
-  "(" @indent)
+; Special handling for SCL built-in function calls
+(function_call
+  function: (identifier)
+  arguments: (argument_list) @indent.begin
+  (#match? @function "(reject|set_parameter|schedule_event|new_transaction|new_posting|deactivate)"))
 
-(new_transaction
-  "(" @indent)
-
-(new_posting
-  "(" @indent)
-
-; Indent import statements with multiple imports
-(import_statement
-  "(" @indent)
+; Indent ternary expressions
+(ternary_expression
+  "?" @indent.begin
+  ":" @indent.begin)
 
 ; Handle multiline string literals
 (string_literal @indent.begin
   (#match? @indent.begin "\n"))
 
+(raw_string_literal @indent.begin
+  (#match? @indent.begin "\n"))
+
 ; Indent comments that continue previous lines
-(line_comment @indent.begin
+(comment @indent.begin
   (#match? @indent.begin "^\\s*//\\s*[^/]"))

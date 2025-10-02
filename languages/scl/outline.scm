@@ -1,80 +1,46 @@
-; Function definitions
-(function_definition
-  name: (identifier) @name) @item
+; Function literals
+(function_literal) @item
 
 ; Variable declarations
 (variable_declaration
   name: (identifier) @name) @item
 
-; Class definitions
-(class_definition
-  name: (identifier) @name) @item
-
-; Struct definitions
-(struct_definition
-  name: (identifier) @name) @item
-
-; Enum definitions
-(enum_definition
-  name: (identifier) @name) @item
-
-; Interface definitions
-(interface_definition
-  name: (identifier) @name) @item
-
-; Type definitions
-(type_definition
-  name: (identifier) @name) @item
-
 ; Import statements
-(import_statement
-  module: (identifier) @name) @item
+(import_expression
+  source: (string_literal) @name) @item
 
 ; Export statements
-(export_statement
-  name: (identifier) @name) @item
-
-; Method definitions
-(method_definition
-  name: (identifier) @name) @item
-
-; Property definitions
-(property_definition
-  name: (identifier) @name) @item
-
-; Constant definitions
-(constant_declaration
-  name: (identifier) @name) @item
-
-; SCL-specific constructs
-(schedule_event
-  event: (string_literal) @name) @item
-
-(new_transaction
-  type: (identifier) @name) @item
-
-(set_parameter
-  name: (string_literal) @name) @item
+(export_statement) @item
 
 ; Assignment statements for important variables
-(assignment_expression
+(assignment_statement
   left: (identifier) @name) @item
 
 ; If statements with conditions
-(if_statement
-  condition: (_) @name) @item
+(if_statement) @item
 
-; While loops
-(while_statement
-  condition: (_) @name) @item
+; For statements
+(for_statement) @item
 
-; For loops
-(for_statement
-  variable: (identifier) @name) @item
+; For-in statements
+(for_in_statement
+  value: (identifier) @name) @item
 
-; Try-catch blocks
-(try_statement) @item
+; SCL-specific function calls that define structure
+(function_call
+  function: (identifier) @name
+  (#match? @name "(reject|set_parameter|schedule_event|new_transaction|new_posting|deactivate)")) @item
 
-; Match/switch statements
-(match_statement
-  expression: (_) @name) @item
+; Map literals (significant data structures)
+(map_literal) @item
+
+; Array literals (significant data structures)
+(array_literal) @item
+
+; Function calls to built-in mathematical functions
+(function_call
+  function: (identifier) @name
+  (#match? @name "(min|max)")) @item
+
+; Return statements
+(return_statement) @item

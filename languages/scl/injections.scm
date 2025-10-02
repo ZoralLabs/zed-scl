@@ -8,47 +8,84 @@
  (#match? @injection.content "^\\s*[\\{\\[]")
  (#set! injection.language "json"))
 
-; Inject regex in string literals used with regex functions
+; Inject regex in string literals used with regex-like functions
 (function_call
-  name: (identifier) @function
+  function: (identifier) @function
   arguments: (argument_list
     (string_literal) @injection.content)
-  (#match? @function "(match|replace|test|search)")
+  (#match? @function "(match|replace|test|search|find)")
   (#set! injection.language "regex"))
 
-; Inject datetime format strings
+; Inject datetime format strings for SCL time functions
 (function_call
-  name: (identifier) @function
+  function: (selector_expression
+    object: (identifier) @module
+    property: (identifier) @function)
   arguments: (argument_list
     (string_literal) @injection.content)
-  (#match? @function "(format_date|parse_date|date_format)")
+  (#eq? @module "times")
+  (#match? @function "(format|parse|next_scheduled_time)")
   (#set! injection.language "strftime"))
 
-; Inject mathematical expressions in calculation contexts
-(assignment_expression
-  right: (string_literal) @injection.content
-  (#match? @injection.content "^[0-9+\\-*/().\\s]+$")
-  (#set! injection.language "math"))
+; Inject SCL parameter names in set_parameter calls
+(function_call
+  function: (identifier) @function
+  arguments: (argument_list
+    (string_literal) @injection.content)
+  (#eq? @function "set_parameter")
+  (#set! injection.language "scl"))
 
-; Inject SCL expressions in template strings
-((template_string) @injection.content
- (#set! injection.language "scl"))
+; Inject event names in schedule_event calls
+(function_call
+  function: (identifier) @function
+  arguments: (argument_list
+    (string_literal) @injection.content)
+  (#eq? @function "schedule_event")
+  (#set! injection.language "scl"))
 
-; Inject comments as documentation
-((line_comment) @injection.content
- (#match? @injection.content "^//\\s*@(param|return|throws|example)")
- (#set! injection.language "markdown"))
+; Inject transaction type strings
+(function_call
+  function: (identifier) @function
+  arguments: (argument_list
+    (string_literal) @injection.content)
+  (#eq? @function "new_transaction")
+  (#set! injection.language "scl"))
 
-((block_comment) @injection.content
- (#match? @injection.content "/\\*\\*")
- (#set! injection.language "markdown"))
+; Inject mathematical expressions in raw string literals
+((raw_string_literal) @injection.content
+ (#match? @injection.content "^[0-9+\\-*/().\\s]+$")
+ (#set! injection.language "math"))
 
 ; Inject XML/HTML in string literals that look like markup
 ((string_literal) @injection.content
  (#match? @injection.content "^\\s*<[a-zA-Z]")
  (#set! injection.language "html"))
 
-; Inject YAML in multiline strings
+; Inject YAML in multiline string literals
 ((string_literal) @injection.content
  (#match? @injection.content "^\\s*[a-zA-Z_][a-zA-Z0-9_]*:\\s")
  (#set! injection.language "yaml"))
+
+; Inject comments as documentation for SCL functions
+((comment) @injection.content
+ (#match? @injection.content "^//\\s*@(param|return|throws|example)")
+ (#set! injection.language "markdown"))
+
+; Inject block comments as documentation
+((comment) @injection.content
+ (#match? @injection.content "/\\*\\*")
+ (#set! injection.language "markdown"))
+
+; Inject SCL module names in import expressions
+(import_expression
+  source: (string_literal) @injection.content
+  (#set! injection.language "scl"))
+
+; Inject balance ID patterns
+(function_call
+  function: (identifier) @function
+  arguments: (argument_list
+    (parameter_variable) @injection.content)
+  (#match? @function "(new_posting)")
+  (#match? @injection.content "\\$.*balance.*")
+  (#set! injection.language "scl"))
