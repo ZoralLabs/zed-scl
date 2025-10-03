@@ -1,164 +1,119 @@
-; Keywords
-;[
-;  "if"
-;  "else"
-;  "for"
-;  "in"
-;  "func"
-;  "return"
-;  "import"
-;  "export"
-;  "var"
-;  "break"
-;  "continue"
-;] @keyword
-
-; Built-in SCL functions
-;[
-;  "reject"
-;  "set_parameter"
-;  "schedule_event"
-;  "new_transaction"
-;  "new_posting"
-;  "deactivate"
-;  "min"
-;  "max"
-;] @function.builtin
-
-; Boolean literals
-;[
-;  "true"
-;  "false"
-;  "undefined"
-;] @constant.builtin
-
 ; Comments
-;(comment) @comment
-
-; Identifiers
-;(identifier) @variable
-
-; Parameter variables (prefixed with $)
-;(parameter_variable) @variable.parameter
-
-; Function definitions and calls
-;(function_literal
-;  parameters: (parameter_list) @parameter)
-
-;(function_call
-;  function: (identifier) @function)
-
-;(function_call
-;  function: (selector_expression
-;    property: (identifier) @function.method))
-
-; Operators
-;[
-;  "+"
-;  "-"
-;  "*"
-;  "/"
-;  "%"
-;  "<<"
-;  ">>"
-;  "&"
-;  "&^"
-;  "|"
-;  "^"
-;  "=="
-;  "!="
-;  "<"
-;  "<="
-;  ">"
-;  ">="
-;  "&&"
-;  "||"
-;  "!"
-;] @operator
-
-; Assignment operators
-;[
-;  "="
-;  ":="
-;  "+="
-;  "-="
-;  "*="
-;  "/="
-;  "%="
-;  "&="
-;  "|="
-;  "&^="
-;  "^="
-;  "<<="
-;  ">>="
-;] @operator.assignment
+(comment) @comment
 
 ; Punctuation
-;[
-;  "("
-;  ")"
-;  "{"
-;  "}"
-;  "["
-;  "]"
-;] @punctuation.bracket
+[":"
+ ","
+ ";"
+ "."] @punctuation.delimiter
 
-;[
-;  ","
-;  ";"
-;  ":"
-;  "."
-;] @punctuation.delimiter
+; Brackets
+["{"
+ "}"
+ "["
+ "]"
+ "("
+ ")"] @punctuation.bracket
 
-; Literals
-;(number_literal) @number
+; Operators
+["="
+ ":="
+ "=="
+ "!"
+ "!="
+ "+"
+ "++"
+ "+="
+ "-"
+ "--"
+ "-="
+ "*"
+ "*="
+ "/"
+ "/="
+ "%"
+ "%="
+ "^"
+ "^="
+ "&"
+ (and_operator)
+ "&="
+ "|"
+ (or_operator)
+ "|="
+ "<"
+ "<="
+ "<<"
+ "<<="
+ ">"
+ ">="
+ ">>"
+ ">>="
+ "&^"
+ "&^="
+ "?"] @operator
 
-;(string_literal) @string
-;(raw_string_literal) @string
-;(char_literal) @string
+; Generic variable
+(identifier) @variable
 
-; Control flow
-;(if_statement) @conditional
-;(for_statement) @repeat
-;(for_in_statement) @repeat
+; Parameter variables
+(parameter_variable) @variable.parameter
 
-;(return_statement) @keyword.return
-;(break_statement) @keyword.control
-;(continue_statement) @keyword.control
+; Booleans
+(boolean_literal) @constant.builtin.boolean
 
-; Import/Export
-;(import_expression) @keyword.import
-;(export_statement) @keyword.export
+; Undefined
+(undefined) @constant.builtin
 
-; Property access
-;(selector_expression
-;  property: (identifier) @property)
+; Numbers
+(number_literal) @number
 
-; Array and map access
-;(index_expression) @operator
+; Import
+(import_expression (import) @function.builtin.import)
 
-; Map keys in literals
-;(map_pair
-;  key: (_) @property)
+; Keywords
+(if_statement (if) @keyword.control.conditional)
+(if_statement (else) @keyword.control.conditional)
+(for_statement (for) @keyword.control.loop)
+(for_in_statement (for) @keyword.control.loop)
+(for_in_statement (in) @keyword.control.loop)
+(return_statement (return) @keyword.control.jump)
+(break_statement (break) @keyword.control.jump)
+(continue_statement (continue) @keyword.control.jump)
+(export_statement (export) @keyword.declaration)
+(function_literal (func) @keyword.declaration)
 
-; Function parameters
-;(parameter) @parameter
-;(variadic_parameter) @parameter
+; Generic function call
+(function_call function: (identifier) @function)
 
-; Special highlighting for error/reject calls
-;(function_call
-;  function: (identifier) @function.builtin.error
-;  (#eq? @function.builtin.error "reject"))
+; Builtin functions
+(function_call function: (identifier) @function.builtin
+    (#match? @function.builtin "^(len|copy|append|delete|splice|format|range|assert|assert2|min|max|parse_bool|type_name|is_int|is_float|is_string|is_bool|is_char|is_bytes|is_array|is_immutable_array|is_map|is_immutable_map|is_iterable|is_time|is_error|is_undefined|is_function|is_callable|is_decimal|is_uid|is_balance_id|is_balance|is_posting|is_transaction|is_tiered_rate|is_dated_rate|is_nid|is_op_context)$"))
 
-; Special highlighting for parameter setting
-;(function_call
-;  function: (identifier) @function.builtin.config
-;  (#eq? @function.builtin.config "set_parameter"))
+; Builtin contract functions
+(function_call function: (identifier) @function.builtin.contract
+    (#match? @function.builtin.contract "^(log|reject|deactivate|new_transaction|new_posting|new_notification|new_snapshot|enable_events|disable_events|set_parameter|schedule_event|to_event_time)$"))
 
-; Module names in imports
-;(import_expression
-;  source: (string_literal) @string.special)
+; Builtin type functions
+(function_call function: (identifier) @type.builtin
+    (#match? @type.builtin "^(string|int|bool|float|char|bytes|time|decimal|uid|tiered_rate|dated_rate)$"))
 
-; Increment/decrement
-;(increment_statement) @operator
-;(decrement_statement) @operator
+; Generic selector
+(selector_expression
+    object: (identifier) @module
+    property: (identifier) @property)
+
+; Function call with selector
+(function_call function: (selector_expression
+    object: (identifier) @module
+    property: (identifier) @function))
+
+; Strings
+(string_literal) @string
+
+; Map keys
+(map_pair key: (identifier) @property)
+(map_pair key: (string_literal) @property.string)
+(map_pair key: (number_literal) @property.number)
+(map_pair key: (boolean_literal) @property.boolean)
+(map_pair key: (undefined) @property.keyword)
