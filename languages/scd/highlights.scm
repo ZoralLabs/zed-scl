@@ -69,9 +69,14 @@
 (block_mapping_pair key: (quoted_string) @string)
 (flow_mapping_pair key: (quoted_string) @string)
 
-; Top-level SCD keywords in block mappings
+; Top-level SCD keywords as direct block mapping pairs in document
 (document
-  (block_mapping
-    (block_mapping_pair
-      key: (scalar) @property.builtin
-        (#match? @property.builtin "^(id|type|name|category|description|schema|org_unit|author|timezone|parameters|snapshots|modules|events|balances|tier)$"))))
+  (block_mapping_pair
+    key: (scalar) @property.builtin
+      (#match? @property.builtin "^(id|type|name|category|description|schema|org_unit|author|timezone|parameters|snapshots|modules|events|balances|tier)$")))
+
+; Also highlight SCD keywords in nested block mappings
+(block_mapping
+  (block_mapping_pair
+    key: (scalar) @property.builtin
+      (#match? @property.builtin "^(id|type|name|category|description|schema|org_unit|author|timezone|parameters|snapshots|modules|events|balances|tier)$")))

@@ -1,77 +1,62 @@
-; Increase indent after opening braces
-(block "{" @indent)
-(map_literal "{" @indent)
-(array_literal "[" @indent)
-(function_literal "{" @indent)
-(if_statement "{" @indent)
-(for_statement "{" @indent)
-(for_in_statement "{" @indent)
+; Increase indent for block contents
+(block) @indent
 
-; Decrease indent before closing braces
-("}" @outdent)
-("]" @outdent)
+; Increase indent for function body
+(function_literal
+  body: (block) @indent)
 
-; Increase indent for function parameters spanning multiple lines
-(parameter_list
-  "(" @indent)
-
-; Decrease indent after parameter list closing
-(")" @outdent)
-
-; Special indentation for control flow
+; Increase indent for if statement consequence and alternative
 (if_statement
-  condition: (_) @_indent.align)
+  consequence: (block) @indent)
 
+(if_statement
+  alternative: (block) @indent)
+
+; Increase indent for loop bodies
 (for_statement
-  condition: (_) @_indent.align)
+  body: (block) @indent)
 
 (for_in_statement
-  iterable: (_) @_indent.align)
+  body: (block) @indent)
 
-; Indent continuation lines
-(binary_expression
-  right: (_) @_indent.begin)
+; Increase indent for array literal contents (multi-line)
+(array_literal) @indent
 
-(assignment_statement
-  right: (_) @_indent.begin)
+; Increase indent for map literal contents (multi-line)
+(map_literal) @indent
 
-(variable_declaration
-  value: (_) @_indent.begin)
+; Increase indent for function call arguments (multi-line)
+(argument_list) @indent
 
-; Indent function call arguments when split across lines
-(function_call
-  arguments: (argument_list) @_indent.begin)
+; Increase indent for parameter lists (multi-line)
+(parameter_list) @indent
 
-; Indent method chaining
-(selector_expression
-  "." @_indent.begin)
+; Align brackets
+[
+  "{"
+  "}"
+] @indent.branch
 
-; Indent array elements when split across lines
-(array_literal
-  (_) @_indent.begin)
+[
+  "["
+  "]"
+] @indent.branch
 
-; Indent map properties when split across lines
-(map_literal
-  (map_pair) @_indent.begin)
+[
+  "("
+  ")"
+] @indent.branch
 
-; Special handling for SCL built-in function calls
-(function_call
-  function: (identifier)
-  arguments: (argument_list) @_indent.begin
-  (#match? @function "(reject|set_parameter|schedule_event|new_transaction|new_posting|deactivate)"))
+; Dedent closing brackets
+[
+  "}"
+  "]"
+  ")"
+] @indent.dedent
 
-; Indent ternary expressions
-(ternary_expression
-  "?" @_indent.begin
-  ":" @_indent.begin)
 
-; Handle multiline string literals
-(string_literal @_indent.begin
-  (#match? @_indent.begin "\n"))
-
-(raw_string_literal @_indent.begin
-  (#match? @_indent.begin "\n"))
-
-; Indent comments that continue previous lines
-(comment @_indent.begin
-  (#match? @_indent.begin "^\\s*//\\s*[^/]"))
+; Begin/end patterns for control structures
+(if_statement) @indent.begin
+(for_statement) @indent.begin
+(for_in_statement) @indent.begin
+(function_literal) @indent.begin

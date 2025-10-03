@@ -1,46 +1,56 @@
+; Scopes
+(block) @local.scope
+(function_literal) @local.scope
+(for_statement) @local.scope
+(for_in_statement) @local.scope
+(source_file) @local.scope
+
 ; Variable definitions
 (variable_declaration
-  name: (identifier) @local.definition)
+  name: (identifier) @local.definition.variable)
 
-; Function parameters are local definitions
-(parameter (identifier) @local.definition)
-(variadic_parameter (identifier) @local.definition)
+; Parameter definitions in function literals
+(function_literal
+  parameters: (parameter_list
+    (parameter (identifier) @local.definition.parameter)))
 
-; Function definitions
-(function_literal) @local.scope
+; Variadic parameter definitions
+(function_literal
+  parameters: (parameter_list
+    (variadic_parameter (identifier) @local.definition.parameter)))
 
-; Block statements create new scopes
-(block) @local.scope
+; For loop variable definitions
+(for_statement
+  initialization: (variable_declaration
+    name: (identifier) @local.definition.variable))
 
-; For loop variables
+; For-in loop variable definitions
 (for_in_statement
-  key: (identifier)? @local.definition
-  value: (identifier) @local.definition
-  body: (block) @local.scope)
+  key: (identifier) @local.definition.variable)
+
+(for_in_statement
+  value: (identifier) @local.definition.variable)
 
 ; Variable references
 (identifier) @local.reference
 
-; Parameter variable references (these are global contract parameters, not local)
-(parameter_variable) @global.reference
+; Parameter variable references (starting with $)
+(parameter_variable) @local.reference
 
-; Import creates a local binding
-(variable_declaration
-  name: (identifier) @local.definition
-  value: (import_expression))
-
-; Function calls don't create references to the function name
-; unless it's a simple identifier
+; Function references in function calls
 (function_call
   function: (identifier) @local.reference)
 
-; Property access doesn't create a reference to the property name
-; but the object might be a local reference
+; Property access - object reference
 (selector_expression
   object: (identifier) @local.reference)
 
-; Index access - the object might be a local reference
+; Index expression - object reference
 (index_expression
+  object: (identifier) @local.reference)
+
+; Slice expression - object reference
+(slice_expression
   object: (identifier) @local.reference)
 
 ; Assignment targets

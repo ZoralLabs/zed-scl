@@ -1,37 +1,37 @@
-; YAML-based folding for SCD files
-; Targets actual grammar nodes from tree-sitter-scd
-
-; YAML block structures - main folding targets
+; Block mappings (YAML-style key-value pairs)
 (block_mapping) @fold
+
+; Block sequences (YAML-style lists)
 (block_sequence) @fold
 
-; Flow structures (inline YAML)
+; Flow mappings (JSON-style objects)
 (flow_mapping) @fold
+
+; Flow sequences (JSON-style arrays)
 (flow_sequence) @fold
 
-; Multi-line strings
+; SCD-specific top-level sections that should be foldable
+((block_mapping_pair
+  key: (scalar) @key
+  value: (block_mapping) @fold)
+ (#match? @key "^(parameters|balances|events|modules|snapshots)$"))
+
+; Individual event definitions within events section
+(block_mapping_pair
+  key: (scalar) @events_key
+  value: (block_mapping
+    (block_mapping_pair
+      value: (block_mapping) @fold))
+ (#eq? @events_key "events"))
+
+; Fold regions between INDENT and DEDENT tokens
+((INDENT) @fold.start
+ (DEDENT) @fold.end)
+
+; Quoted strings that span multiple lines
 (double_quoted_string) @fold
 (single_quoted_string) @fold
 
-; Comments (for multi-line comment blocks)
-(comment) @fold
-
-; Document sections (if they span multiple lines)
-(document) @fold
-
-; Block mapping pairs that contain nested structures
-(block_mapping_pair
-  value: (block_mapping)) @fold
-
-(block_mapping_pair
-  value: (block_sequence)) @fold
-
-; Block sequence items that contain nested structures
-(block_sequence_item
-  (block_mapping)) @fold
-
-(block_sequence_item
-  (block_sequence)) @fold
-
-; Anchored values (YAML anchors with content)
-(anchor) @fold
+; Comments that are part of a sequence (multiple consecutive comments)
+((comment) @fold
+ (#set! fold.type "comment"))

@@ -1,53 +1,29 @@
-; YAML-aware indentation for SCD files
-; Based on actual tree-sitter-scd grammar nodes
+; Use INDENT/DEDENT tokens for indentation control
+(INDENT) @indent
+(DEDENT) @outdent
 
-; YAML block mapping indentation
-; When we see a mapping pair with a value, indent the value
-(block_mapping_pair
-  ":" @indent
-  (#set! "scope" "all"))
-
-; Block sequence items - indent content after the dash
-(block_sequence_item
-  "-" @indent
-  (#set! "scope" "all"))
-
-; Flow structures use brackets - standard bracket indentation
+; Increase indent inside flow mappings
 (flow_mapping
-  "{" @indent
-  "}" @outdent)
+  (flow_mapping_content) @indent)
 
+; Increase indent inside flow sequences
 (flow_sequence
-  "[" @indent
-  "]" @outdent)
+  (flow_sequence_content) @indent)
 
-; Nested block structures
+; Dedent closing brackets for flow structures
+("}" @outdent)
+("]" @outdent)
+
+; Zero indent for document markers
+(document_start) @outdent
+(document_end) @outdent
+
+; Indent after colons in block mappings (for inline values)
 (block_mapping_pair
-  value: (block_mapping) @indent)
+  ":"
+  value: (_) @indent)
 
-(block_mapping_pair
-  value: (block_sequence) @indent)
-
+; Indent after dashes in block sequences (for inline values)
 (block_sequence_item
-  (block_mapping) @indent)
-
-(block_sequence_item
-  (block_sequence) @indent)
-
-; Multi-line strings preserve their internal structure
-; but should align with their container
-(double_quoted_string) @_indent.always
-(single_quoted_string) @_indent.always
-
-; YAML anchors - indent the anchored content
-(anchor
-  "&" @indent
-  (#set! "scope" "all"))
-
-; Document markers don't affect indentation
-(document_start) @_indent.zero
-(document_end) @_indent.zero
-
-; Comments should preserve existing indentation context
-; This ensures comments align with their surrounding content
-(comment) @_indent.auto
+  "-"
+  (_) @indent)
