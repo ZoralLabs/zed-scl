@@ -1,8 +1,8 @@
 id = "scl"
 name = "SCL"
-description = "Zed extension for SCL and SCD languages with syntax highlighting and language server integration"
 version = "2.0.1"
 schema_version = 1
+description = "Zed extension for SCL and SCD languages with syntax highlighting and language server integration"
 authors = ["Yurii Biurher"]
 repository = "https://github.com/ZoralLabs/zed-scl"
 
@@ -15,5 +15,5 @@ repository = "https://github.com/ZoralLabs/tree-sitter-scd"
 commit = "main"
 
 [language_servers.scl-lsp]
-name = "scl-lsp"
+name = "SCL Language Server"
 languages = ["scl", "scd"]

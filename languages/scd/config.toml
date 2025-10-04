@@ -1,10 +1,10 @@
-name = "SCD"
+name = "scd"
 grammar = "scd"
 path_suffixes = ["scd"]
 line_comments = ["#"]
 block_comments = []
 autoclose_before = ":.,}])>"
-tab_size = 2
+tab_size = 4
 hard_tabs = false
 
 # YAML-like language features

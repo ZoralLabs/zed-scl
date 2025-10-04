@@ -1,4 +1,4 @@
-name = "SCL"
+name = "scl"
 grammar = "scl"
 path_suffixes = ["scl"]
 line_comments = ["//"]
