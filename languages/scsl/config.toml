@@ -1,0 +1,18 @@
+name = "scsl"
+grammar = "scsl"
+path_suffixes = ["scs", "scsl"]
+line_comments = ["#"]
+block_comments = []
+autoclose_before = ":.,}])>"
+tab_size = 4
+hard_tabs = false
+
+# YAML-like language features
+word_characters = ["_", "-"]
+
+brackets = [
+  { start = "[", end = "]", close = true, newline = true },
+  { start = "\"", end = "\"", close = true, newline = false, not_in = ["string"] },
+]
+
+indent = { kind = "space", size = 4 }

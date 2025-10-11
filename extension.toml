@@ -14,6 +14,10 @@ commit = "main"
 repository = "https://github.com/ZoralLabs/tree-sitter-scd"
 commit = "main"
 
+[grammars.scsl]
+repository = "https://github.com/ZoralLabs/tree-sitter-scsl"
+commit = "main"
+
 [language_servers.scl-lsp]
 name = "SCL Language Server"
 languages = ["scl", "scd"]
